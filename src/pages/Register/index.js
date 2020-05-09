@@ -1,131 +1,190 @@
-import React, { useState } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
+import MaskedInput from 'react-text-mask';
 
-import './styles.css'
-import logoImg from '../../assets/logoCasaNova.png'
+import './styles.css';
+import logoImg from '../../assets/logoCasaNova.png';
 
-import {cpfMask} from '../../masks'
-
-export default function Register() {
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [cpf, setCpf] = useState('');
-  const [nascimento, setNascimento] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [cep, setCep] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [bairro, setBairro] = useState('');
-  const [cidade, setCidade] = useState('');
-  const [uf, setUf] = useState('');
-
-
-  async function handleRegister(e) {
-    e.preventDefault();
-    const data = {
-      nome,
-      // email,
-      // city,
-      // uf,
-      // whatsapp
+class Register extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      nome: "",
+      cpf: "",
+      nascimento: "",
+      telefone: "",
+      email: "",
+      cep: "",
+      endereco: "",
+      bairro: "",
+      cidade: "",
+      uf: ""
     }
 
-    // try{
-    //   //const response = await api.post('ongs', data);
-    //   alert(`Seu ID de acesso: ${response.data.id}`);
-    //   history.push('/');
-    // } catch {
-    //   alert('Erro no cadastro, tente novamente!')
-    // }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClear = this.handleClear.bind(this);
   }
 
-  return (
-    <div className="register-container">
-      <div className="content">
-        <section>
-        <h1>Cadastro</h1>
-          <p>Faça seu cadastro</p>
-          <img src={logoImg} alt="Casa Nova" />
-          
-          <Link className="back-link" >
-          <FiArrowLeft />
+  handleChange(event) {
+    let change = {}
+    change[event.target.name] = event.target.value
+    this.setState(change)
+  }
+
+  handleClear(event) {
+    event.preventDefault()
+    this.setState({
+      nome: "",
+      cpf: "",
+      nascimento: "",
+      telefone: "",
+      email: "",
+      cep: "",
+      endereco: "",
+      bairro: "",
+      cidade: "",
+      uf: ""
+    })
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    let data = new FormData();
+    data.append("email", this.state.email);
+
+    console.log(JSON.stringify(this.state));
+    alert(JSON.stringify(this.state));
+  }
+
+  validateForm() {
+    return this.state.nome.length > 0 && this.state.cpf.length > 0 &&
+      this.state.nascimento.length > 0 && this.state.telefone.length > 0 &&
+      this.state.email.length > 0 && this.state.cep.length > 0 &&
+      this.state.endereco.length > 0 && this.state.bairro.length > 0 &&
+      this.state.cidade.length > 0 && this.state.uf.length > 0;
+  }
+
+  render() {
+    return (
+      <div className="register-container" >
+        <div className="content">
+          <section>
+            <h1>Cadastro</h1>
+            <p>Faça seu cadastro e encontre as melhores propriedades pelos menores preços</p>
+            <img src={logoImg} alt="Casa Nova" />
+
+            <Link className="back-link" >
+              <FiArrowLeft />
             Fazer Login
           </Link>
-        </section>
+          </section>
 
-        <form onSubmit={handleRegister}>
-          <input
-            placeholder="Nome"
-            value={nome}
-            onChange={e => setNome(e.target.value)}
-          />
-
-          <input
-            placeholder="Cpf"
-            value={cpf}
-            onChange={e => setCpf(e.target.value)}
-          />
-
-          <input
-            type="date"
-            placeholder="Data de Nascimento"
-            value={nascimento}
-            onChange={e => setNascimento(e.target.value)}
-          />
-
-          <input
-            placeholder="Telefone"
-            //type="tel"
-            value={telefone}
-            onChange={e => setTelefone(e.target.value)}
-          />
-
-          <input
-            placeholder="Email"
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-
-          <input
-            placeholder="CEP"
-            value={cep}
-            onChange={e => setCep(e.target.value)}
-          />
-
-          <input
-            placeholder="Endereco"
-            value={endereco}
-            onChange={e => setEndereco(e.target.value)}
-          />
-
-          <input
-            placeholder="Bairro"
-            value={bairro}
-            onChange={e => setBairro(e.target.value)}
-          />
-
-          <div className="input-group">
+          <form onSubmit={this.handleSubmit}>
             <input
-              placeholder="Cidade"
-              value={cidade}
-              onChange={e => setCidade(e.target.value)}
+              placeholder="Nome"
+              name="nome"
+              value={this.state.nome}
+              onChange={this.handleChange.bind(this)}
+            />
+
+            <MaskedInput
+              placeholder="Cpf"
+              //maxLength='14'
+              name="cpf"
+              mask={[/[0-9]/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.',
+                /\d/, /\d/, /\d/, '-', /\d/, /\d/]}
+              guide={true}
+              value={this.state.cpf}
+              onChange={this.handleChange.bind(this)}
+            />
+
+            <MaskedInput
+              name="nascimento"
+              placeholder="Data de nascimento"
+              mask={[/[0-9]/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+              guide={true}
+              value={this.state.nascimento}
+              onChange={this.handleChange.bind(this)}
+            />
+
+            <MaskedInput
+              placeholder="Telefone"
+              name="telefone"
+              mask={['(', /[0-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/,
+                /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+              guide={true}
+              value={this.state.telefone}
+              onChange={this.handleChange.bind(this)}
             />
 
             <input
-              placeholder="UF"
-              style={{ width: 80 }}
-              value={uf}
-              onChange={e => setUf(e.target.value)}
+              placeholder="Email"
+              name="email"
+              type="email"
+              value={this.state.email}
+              onChange={this.handleChange.bind(this)}
             />
-          </div>
 
-          <button className="button" type="submit" >Cadastrar</button>
-        </form>
+            <MaskedInput
+              placeholder="CEP"
+              name="cep"
+              mask={[/[0-9]/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+              guide={true}
+              value={this.state.cep}
+              onChange={this.handleChange.bind(this)}
+            />
 
-        
+            <input
+              placeholder="Endereco"
+              name="endereco"
+              value={this.state.endereco}
+              onChange={this.handleChange.bind(this)}
+            />
 
+            <input
+              placeholder="Bairro"
+              name="bairro"
+              value={this.state.bairro}
+              onChange={this.handleChange.bind(this)}
+            />
+
+            <div className="input-group">
+              <input
+                placeholder="Cidade"
+                name="cidade"
+                value={this.state.cidade}
+                onChange={this.handleChange.bind(this)}
+              />
+
+              <input
+                placeholder="UF"
+                name="uf"
+                style={{ width: 80 }}
+                value={this.state.uf}
+                onChange={this.handleChange.bind(this)}
+              />
+            </div>
+
+            <button className="button-clear"
+              type="reset"
+              onClick={this.handleClear}>
+              Limpar
+            </button>
+            <button
+              className="button"
+              type="submit"
+              onSubmit={this.handleSubmit}
+              disabled={!this.validateForm()}>
+              Cadastrar
+            </button>
+          </form>
+
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
+
+export default Register
