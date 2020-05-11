@@ -17,4 +17,4 @@ Caso você não tenha nem o node nem o yarn, siga os links abaixo e configure o 
 
 https://medium.com/thdesenvolvedores/node-js-o-que-%C3%A9-por-que-usar-e-primeiros-passos-1118f771b889
 
-https://classic.yarnpkg.com/pt-BR/docs/installing-dependencies/
+https://classic.yarnpkg.com/pt-BR/docs/installing-dependencies/b1cb3dff33
